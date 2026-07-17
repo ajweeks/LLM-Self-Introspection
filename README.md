@@ -89,14 +89,39 @@ Whether a *frozen* model can interpret the injected token from a **linear** proj
 
 Because H1 + the layer sweep run regardless, there is a reportable result either way.
 
-## RESULTS (fill in from `results/metrics.json` after the run)
+## RESULTS
+
+Run on 2026-07-17 — frozen Qwen2.5-0.5B-Instruct, 1000 prompts/class, layer 14, 8 epochs,
+linear projection (no MLP, no LoRA). Held-out test set = 300 prompts (150/150). Full numbers in
+`results/metrics.json`; plots in `results/roc.png` and `results/layer_sweep.png` (regenerate with
+`python train.py`).
 
 | method | acc | AUROC | FPR@95%TPR |
 |--------|-----|-------|-----------|
-| self-read (own state) | | | |
-| ablation (shuffled)   | | | |
-| length baseline       | | | |
-| H1 probe (layer L)    | | | |
+| **self-read (own state)** | **0.870** | **0.934** | **0.287** |
+| ablation (shuffled)   | 0.520 | 0.528 | 0.913 |
+| length baseline       | 0.630 | 0.681 | 0.800 |
+| H1 probe (layer 14)   | 0.797 | 0.870 | 0.473 |
+
+**Layer sweep:** signal peaks at **layer 11 (AUROC 0.890)**, is high and roughly flat across all 24
+transformer layers (~0.83–0.89), and is exactly **0.500 at layer 0 (embeddings)** — a clean sanity
+check that separability only appears once attention has mixed the prompt into the last-token state.
+
+**Both hypotheses hold.**
+
+- **H1 (signal exists):** ✓ the hidden state linearly separates jailbreak vs. regular far above
+  chance (0.87 at the read layer, 0.89 at best), across essentially every transformer layer.
+- **H2 (self-read, headline):** ✓ self-read (0.934) beats the length floor (0.681) decisively and
+  the shuffled-activation ablation collapses to chance (0.528) — so the win comes from *this input's*
+  activation, not the harness or class priors. Notably self-read even **exceeds the linear H1 probe**
+  (0.870) and the best single-layer probe (0.890): the frozen model reading its own state through its
+  own forward pass extracts more than a linear readout of that same state.
+
+The README's one empirical risk (a *linear* projection underfitting) **did not materialize** — no
+`PROJ_HIDDEN`/`USE_LORA` fallback needed. Training loss hovered near 0.69 but test AUROC/acc were
+high, i.e. the projection is well-calibrated-but-confident rather than stuck at chance.
+
+See [`ANALYSIS.md`](ANALYSIS.md) for the full write-up, caveats, and next steps.
 
 - Best layer (from sweep): **L=__**, AUROC **__**  (see `results/layer_sweep.png`)
 - **Takeaway:** _<one line: did self-read beat ablation + length, and by how much?>_
