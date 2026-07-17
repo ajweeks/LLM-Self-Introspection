@@ -1,0 +1,50 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Project outputs (see run.sh / config.py)
+cache/
+results/
+*.pt
+*.pth
+*.ckpt
+*.png
+
+# Hugging Face / model caches
+.cache/
+hf_cache/
+~/.cache/huggingface/
+*.safetensors
+*.bin
+
+# Logs
+*.log
+wandb/
+runs/
+logs/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Environment / secrets
+.env

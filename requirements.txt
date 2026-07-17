@@ -1,0 +1,8 @@
+torch
+transformers>=4.44
+datasets
+accelerate
+scikit-learn
+numpy
+matplotlib
+peft
