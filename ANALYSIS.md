@@ -76,6 +76,14 @@ reusable), and might push AUROC further, but the headline stands on the linear p
 - **transformers 5.14.1** (vs. the `>=4.44` the code targets) — ran clean; only a benign `torch_dtype`
   deprecation warning.
 
+## Text baseline (added post-hoc, `analyze.py`)
+
+A TF-IDF n-gram text baseline reaches **0.889** — above the linear hidden-state probe (0.871) —
+confirming that for input-visible jailbreaks shallow lexical features are already strong. Self-read
+(0.934) still exceeds it, but the gap is within bootstrap noise and needs a CI to firm up. The
+diff-of-means direction (0.866 ≈ full probe 0.871) shows the signal is near-one-dimensional; the
+length-band control (0.862) rules out length as the driver.
+
 ## Next steps (cheapest first, cache is reusable)
 
 1. **Seeds + CI.** Re-run self-read and the best-layer probe over 3–5 seeds; report mean ± std to

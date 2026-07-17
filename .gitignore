@@ -18,7 +18,6 @@ dist/
 
 # Project outputs (see run.sh / config.py)
 cache/
-results/
 *.pt
 *.pth
 *.ckpt
