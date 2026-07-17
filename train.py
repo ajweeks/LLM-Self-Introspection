@@ -116,6 +116,13 @@ def main():
     print("\n=== metrics (test set) ===")
     print(json.dumps(res, indent=2))
 
+    # per-example self-read test predictions (test order preserved) -> feeds analyze.py error analysis
+    y_sr, s_sr = roc["self-read (own state)"]
+    json.dump({"text": d["test"]["text"],
+               "label": [int(v) for v in y_sr.tolist()],
+               "self_read_score": [float(v) for v in s_sr.tolist()]},
+              open("results/predictions.json", "w"))
+
     plt.figure(figsize=(6, 6))
     for name, (y, s) in roc.items():
         fpr, tpr, _ = roc_curve(y, s)
